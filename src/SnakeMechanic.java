@@ -4,7 +4,7 @@ import static java.lang.StrictMath.sqrt;
 
 public class SnakeMechanic {
 
-    public final int RADIUS_SEGMENT = 11;
+    public final int RADIUS_SEGMENT = 10;
     private final Random RANDOM = new Random();
     private final int SIZE = 600;
     private final double SPEED = 2.0;
@@ -22,13 +22,40 @@ public class SnakeMechanic {
             this.snakePosition[i] = new Point();
 
     }
-    public void checkCollision(Point cordFruit){
+    public void checkCollision(Point cordFruit, double dx, double dy){
         Point coordFruit = cordFruit;
         if(sqrt((coordFruit.getX() - snakePosition[0].getX())*(coordFruit.getX() - snakePosition[0].getX()) +
                 (coordFruit.getY() - snakePosition[0].getY())*(coordFruit.getY() - snakePosition[0].getY()))<RADIUS_SEGMENT){
             lengthSnake++;
-            snakePosition[lengthSnake - 1].setLocation(snakePosition[lengthSnake - 2].getX() - 1,
-                    snakePosition[lengthSnake - 2].getY());
+            //вниз
+            Point temp = snakePosition[0];
+            if ((dx == 0.0) && (dy == 1.0)){
+                for(int i = lengthSnake - 1; i > 0; i--){
+                    snakePosition[i] = snakePosition[i - 1];
+                }
+                snakePosition[0].setLocation(temp.getX() , temp.getY() + 2 *RADIUS_SEGMENT);
+            }
+            //вверх
+            if ((dx == 0.0) && (dy == -1.0)){
+                for(int i = lengthSnake - 1; i > 0; i--){
+                    snakePosition[i] = snakePosition[i - 1];
+                }
+                snakePosition[0].setLocation(temp.getX(), temp.getY() - 2 *RADIUS_SEGMENT);
+            }
+            //влево
+            if ((dx == -1.0) && (dy == 0.0)){
+                for(int i = lengthSnake - 1; i > 0; i--){
+                    snakePosition[i] = snakePosition[i -1];
+                }
+                snakePosition[0].setLocation(temp.getX() - 2 * RADIUS_SEGMENT, temp.getY() );
+            }
+            //вправо
+            if ((dx == 1.0) && (dy == 0.0)){
+                for(int i = lengthSnake - 1; i > 0; i--){
+                    snakePosition[i] = snakePosition[i - 1];
+                }
+                snakePosition[0].setLocation(temp.getX()+ 2 * RADIUS_SEGMENT, temp.getY());
+            }
             spawnFood = false;
         }
     }
@@ -39,11 +66,11 @@ public class SnakeMechanic {
     public void moveSnake(double dx, double dy){
         //double x = snakeHead.getX();
         //double y = snakeHead.getY();
-        //snakeHead.setLocation(x+SPEED * dx, y + SPEED* dy);
-        for(int i = 0; i < lengthSnake; i++){
-            snakePosition[i].setLocation(snakePosition[i].getX()+SPEED * dx, snakePosition[i].getY() + SPEED* dy);
+        //snakeHead.setLocation(x+SPEED * dx, y + SPEED* dy)
+        for(int i = lengthSnake - 1; i > 0; i--){
+            snakePosition[i] = snakePosition[i -1];
         }
-
+        snakePosition[0].setLocation(snakePosition[0].getX()+SPEED * dx, snakePosition[0].getY() + SPEED* dy);
     }
 
     public Point spawnFruit(){
@@ -65,5 +92,4 @@ public class SnakeMechanic {
         }
         return cordFruit;
     }
-
 }

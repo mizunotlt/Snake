@@ -32,7 +32,8 @@ public class SnakeWindow extends JPanel {
         setFocusable(true);
         ActionListener timerListener = e -> {
             if (!GameOver){
-                snake.checkCollision(coordFruit);
+                snake.checkCollision(coordFruit, dx, dy);
+                repaint();
                 snake.moveSnake(dx,dy);
                 if(!snake.spawnFood)
                     coordFruit = snake.spawnFruit();
@@ -74,8 +75,8 @@ public class SnakeWindow extends JPanel {
                 System.out.print(snake.spawnFood);
                 System.out.println(snake.snakePosition[1]);
             }
-            if (snake.snakeHead.getX() == SIZE || snake.snakeHead.getY() == SIZE ||
-                    snake.snakeHead.getX() == 0 || snake.snakeHead.getY() == 0){
+            if (snake.snakePosition[0].getX() == SIZE || snake.snakePosition[0].getY() == SIZE ||
+                    snake.snakePosition[0].getX() == 0 || snake.snakePosition[0].getY() == 0){
                 GameOver = true;
 
             }
