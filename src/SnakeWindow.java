@@ -1,23 +1,17 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.round;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 
 public class SnakeWindow extends JPanel {
 
     private final int SIZE = 600;
-    private Point[] snakeCord = new Point[SIZE * SIZE];
-    private SnakeMechanic snake = new SnakeMechanic(SIZE, snakeCord);
+    private SnakeMechanic snake = new SnakeMechanic(SIZE);
     private static boolean GameOver = false;
     private double dx = 1;
     private double dy = 0;
@@ -25,65 +19,53 @@ public class SnakeWindow extends JPanel {
     private Image apple;
     private final int IMG_WIDTH = 25;
     private final int IMG_HEIGHT = 25;
-
+    private double angle = 0;
+    //private boolean directionFixed = false;
 
     public SnakeWindow(){
         setBackground(Color.decode("#A4D3EE"));
         setFocusable(true);
+        // Дискретный поворот змеи
+        KeyListener keyListener = new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        angle += PI / 12;
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        angle -= PI / 12;
+                        break;
+                }
+            }
+            public void keyReleased (KeyEvent e){
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        dx = cos(angle );
+                        dy = sin(angle );
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        dx = cos( angle);
+                        dy = sin(angle );
+                        break;
+                }
+            }
+        };
         ActionListener timerListener = e -> {
             if (!GameOver){
                 snake.checkCollision(coordFruit, dx, dy);
-                repaint();
                 snake.moveSnake(dx,dy);
                 if(!snake.spawnFood)
                     coordFruit = snake.spawnFruit();
                 repaint();
-
-                KeyListener keyListener = new KeyAdapter() {
-                    public void keyPressed(KeyEvent e) {
-                        switch (e.getKeyCode()) {
-                            case KeyEvent.VK_DOWN:
-                                dy = 1;
-                                dx = 0;
-                                break;
-                            case KeyEvent.VK_UP:
-                                dy = -1;
-                                dx = 0;
-                                break;
-                            case KeyEvent.VK_LEFT:
-                                dy = 0;
-                                dx = -1;
-                                break;
-                            case KeyEvent.VK_RIGHT:
-                                dy = 0;
-                                dx = 1;
-                                break;
-                            //по часовой стрелке
-                            case KeyEvent.VK_0:
-                                dx = sin(45);
-                                dy = -sin(45);
-                                break;
-                            //против часовой стрелке
-                            case KeyEvent.VK_1:
-                                dx = -cos(45);
-                                dy = sin(45);
-                                break;
-                        }
-                    }
-                };
-                this.addKeyListener(keyListener);
-                System.out.print(snake.spawnFood);
-                System.out.println(snake.snakePosition[1]);
             }
-            if (snake.snakePosition[0].getX() == SIZE || snake.snakePosition[0].getY() == SIZE ||
-                    snake.snakePosition[0].getX() == 0 || snake.snakePosition[0].getY() == 0){
+            if (snake.snakePosition.get(0).getX() >= SIZE || snake.snakePosition.get(0).getY() >= SIZE ||
+                    snake.snakePosition.get(0).getX() <= 0 || snake.snakePosition.get(0).getY() <= 0){
                 GameOver = true;
-
             }
-
         };
-        Timer timer = new Timer(20, timerListener);
-        timer.start();
+        this.addKeyListener(keyListener);
+        Timer timer1 = new Timer(20, timerListener);
+        timer1.start();
         imageDownload();
 
     }
@@ -103,9 +85,9 @@ public class SnakeWindow extends JPanel {
     private void paintSnake (Graphics g, SnakeMechanic snakes){
         g.setColor(Color.decode("#FFB90F"));
         int radius = snakes.RADIUS_SEGMENT;
-        for (int i = 0; i < snakes.lengthSnake; i ++)
-            g.fillOval((int)round(snakes.snakePosition[i].getX()), (int)round(snakes.snakePosition[i].getY()),
-                2 * radius, 2* radius);
+        for (Point snakeSegment : snakes.snakePosition)
+            g.fillOval((int)round(snakeSegment.getX()), (int)round(snakeSegment.getY()),
+                 2 * radius,  2 * radius);
     }
 
     private  void paintFood(Graphics g){
