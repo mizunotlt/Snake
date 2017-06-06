@@ -13,6 +13,7 @@ public class SnakeWindow extends JPanel {
     private final int SIZE = 600;
     private SnakeMechanic snake = new SnakeMechanic(SIZE);
     private static boolean GameOver = false;
+    private static boolean GameStart = false;
     private double dx = 1;
     private double dy = 0;
     private Point coordFruit = new Point();
@@ -20,7 +21,6 @@ public class SnakeWindow extends JPanel {
     private final int IMG_WIDTH = 25;
     private final int IMG_HEIGHT = 25;
     private double angle = 0;
-    //private boolean directionFixed = false;
 
     public SnakeWindow(){
         setBackground(Color.decode("#A4D3EE"));
@@ -34,6 +34,10 @@ public class SnakeWindow extends JPanel {
                         break;
                     case KeyEvent.VK_RIGHT:
                         angle -= PI / 12;
+                        break;
+                    case KeyEvent.VK_ENTER:
+                        if (!GameStart)
+                            GameStart = true;
                         break;
                 }
             }
@@ -73,21 +77,29 @@ public class SnakeWindow extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (!GameOver){
-            paintSnake(g, snake);
-            if(snake.spawnFood)
-                paintFood(g);
+        if (!GameStart){
+            paintStartGame(g);
         }
         else
-            paintEndGame(g);
+            if (!GameOver) {
+                paintSnake(g, snake);
+                if(snake.spawnFood)
+                    paintFood(g);
+            }
+            else
+                paintEndGame(g);
     }
 
     private void paintSnake (Graphics g, SnakeMechanic snakes){
         g.setColor(Color.decode("#FFB90F"));
         int radius = snakes.RADIUS_SEGMENT;
-        for (Point snakeSegment : snakes.snakePosition)
-            g.fillOval((int)round(snakeSegment.getX()), (int)round(snakeSegment.getY()),
-                 2 * radius,  2 * radius);
+        g.fillOval((int)round(snakes.snakePosition.get(0).getX()), (int)round(snakes.snakePosition.get(0).getY()),
+                2 * radius,  2 * radius);
+        g.setColor((Color.GREEN));
+        for ( int i = 1; i < snakes.lengthSnake; i ++){
+            g.fillOval((int)round(snakes.snakePosition.get(i).getX()), (int)round(snakes.snakePosition.get(i).getY()),
+                    2* radius,   2 * radius);
+        }
     }
 
     private  void paintFood(Graphics g){
@@ -102,7 +114,7 @@ public class SnakeWindow extends JPanel {
 
     private  void paintStartGame(Graphics g){
         g.setFont(new Font("Bebas Neue", Font.BOLD, 50));
-        g.drawString("Tap to start", SIZE/2, SIZE/2);
+        g.drawString("Tap to start", 100, 100);
     }
 
     private  void paintEndGame(Graphics g){

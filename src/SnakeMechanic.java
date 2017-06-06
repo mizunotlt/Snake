@@ -23,18 +23,21 @@ public class SnakeMechanic {
 
     public void checkCollision(Point cordFruit, double dx, double dy){
         Point coordFruit = cordFruit;
-        for (Point snakeSegment : snakePosition){
-            if (pow(snakeSegment.getX() - coordFruit.getX(), 2)  +
-                    pow(snakeSegment.getY() - coordFruit.getY(), 2)  <= RADIUS_SEGMENT){
-                lengthSnake++;
-                spawnFood = false;
-            }
+        if (pow(snakePosition.get(0).getX() - coordFruit.getX(), 2)  +
+                pow(snakePosition.get(0).getY() - coordFruit.getY(), 2)  <= RADIUS_SEGMENT){
+            snakePosition.add(new Point(snakePosition.get(lengthSnake - 1).getX()  -  2 * RADIUS_SEGMENT * dx,
+                    snakePosition.get(lengthSnake - 1).getY() - 2 * RADIUS_SEGMENT * dy));
+            lengthSnake++;
+            spawnFood = false;
         }
+
     }
     public void moveSnake(double dx, double dy) {
-        for (Point snakeSegment: snakePosition){
-            snakeSegment.setLocation(snakeSegment.getX() + SPEED * dx,
-                    snakeSegment.getY() + SPEED * dy);
+        snakePosition.get(0).setLocation(snakePosition.get(0).getX() + SPEED * dx,
+                snakePosition.get(0).getY() + SPEED * dy);
+        for (int i = 1 ; i <= lengthSnake - 1 ; i++){
+            snakePosition.get(i).setLocation( snakePosition.get(i - 1).getX()  -  2 * RADIUS_SEGMENT * dx,
+                    snakePosition.get(i - 1).getY() - 2 * RADIUS_SEGMENT * dy);
         }
     }
 
@@ -43,8 +46,8 @@ public class SnakeMechanic {
         double nextCorfY;
         Point cordFruit = new Point();
         while (!spawnFood){
-            nextCordX = RANDOM.nextInt(size - 10) ;
-            nextCorfY= RANDOM.nextInt(size -10)  ;
+            nextCordX = RANDOM.nextInt(size - 10) + 1 ;
+            nextCorfY= RANDOM.nextInt(size -10) + 1  ;
             cordFruit.setLocation(nextCordX,nextCorfY);
             spawnFood = true;
         }
