@@ -46,7 +46,8 @@ public class SnakeMechanic {
 
     }
 
-    public void moveSnake(double dx, double dy) {
+    public void moveSnake(double dx, double dy,
+                          double acceleration) {
         /*
         snakePosition.get(0).setLocation(snakePosition.get(0).getX() + SPEED * dx,
                 snakePosition.get(0).getY() + SPEED * dy);
@@ -55,8 +56,8 @@ public class SnakeMechanic {
                     snakePosition.get(i - 1).getY() - 2 * RADIUS_SEGMENT * dy  );
         }
         */
-        snakePosition.get(0).setLocation(snakePosition.get(0).getX() + SPEED * dx,
-                snakePosition.get(0).getY() + SPEED * dy);
+        snakePosition.get(0).setLocation(snakePosition.get(0).getX() + SPEED * acceleration * dx,
+                snakePosition.get(0).getY() + SPEED * acceleration * dy);
         for (int i = 1 ; i <= lengthSnake - 1 ; i++){
             double prevX  = snakePosition.get(i).getX();
             double prevY = snakePosition.get(i).getY();

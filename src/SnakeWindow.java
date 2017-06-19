@@ -22,7 +22,11 @@ public class SnakeWindow extends JPanel {
     private final int IMG_HEIGHT = 25;
     private double angle = 0;
     private int lengthSnake;
+    private double acceleration = 1.0;
 
+    public  int getSIZE(){
+        return SIZE;
+    }
     public SnakeWindow(){
         setBackground(Color.decode("#A4D3EE"));
         setFocusable(true);
@@ -39,6 +43,9 @@ public class SnakeWindow extends JPanel {
                     case KeyEvent.VK_ENTER:
                         if (!GameStart)
                             GameStart = true;
+                        break;
+                    case KeyEvent.VK_UP:
+                        acceleration = 1.5;
                         break;
                 }
             }
@@ -60,7 +67,7 @@ public class SnakeWindow extends JPanel {
             List<Point> snakePosition = snake.getSnakePosition();
             if (!GameOver){
                 snake.checkCollision(coordFruit, dx, dy);
-                snake.moveSnake(dx,dy);
+                snake.moveSnake(dx,dy,acceleration);
                 if(!snake.getSpawnFood())
                     coordFruit = snake.spawnFruit();
                 repaint();

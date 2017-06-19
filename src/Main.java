@@ -3,8 +3,8 @@ import javax.swing.*;
 public class Main extends JFrame{
 
     private static SnakeWindow snakeWindow;
-    private final int Window_with = 600;
-    private final int Window_hight = 600;
+    private final int Window_with = snakeWindow.getSIZE();
+    private final int Window_hight = snakeWindow.getSIZE();
 
     private Main(String s){
         super(s);
