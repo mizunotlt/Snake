@@ -20,8 +20,6 @@ public class SnakeWindow extends JPanel {
     private Image apple;
     private final int IMG_WIDTH = 25;
     private final int IMG_HEIGHT = 25;
-    private double angle = 0;
-    private double speed = 2.0;
     private int lengthSnake;
     private double acceleration = 1.0;
 
@@ -36,10 +34,10 @@ public class SnakeWindow extends JPanel {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT:
-                        angle += PI / 12;
+                        snake.incAngle();
                         break;
                     case KeyEvent.VK_RIGHT:
-                        angle -= PI / 12;
+                        snake.decAngle();
                         break;
                     case KeyEvent.VK_ENTER:
                         if (!GameStart)
@@ -53,12 +51,12 @@ public class SnakeWindow extends JPanel {
             public void keyReleased (KeyEvent e){
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT:
-                        dx = cos(angle );
-                        dy = sin(angle );
+                        dx = cos(snake.getAngle());
+                        dy = sin(snake.getAngle());
                         break;
                     case KeyEvent.VK_RIGHT:
-                        dx = cos( angle);
-                        dy = sin(angle );
+                        dx = cos(snake.getAngle());
+                        dy = sin(snake.getAngle() );
                         break;
                     case KeyEvent.VK_UP:
                         acceleration = 1.0;
@@ -69,13 +67,11 @@ public class SnakeWindow extends JPanel {
         ActionListener timerListener = e -> {
             lengthSnake = snake.getLengthSnake();
             List<Point> snakePosition = snake.getSnakePosition();
-            if (lengthSnake % 5 == 0){
-                speed += 0.25;
-            }
+
 
             if (!GameOver){
                 snake.checkCollision(coordFruit, dx, dy);
-                snake.moveSnake(speed,dx,dy,acceleration);
+                snake.moveSnake(dx,dy,acceleration);
                 if(!snake.getSpawnFood())
                     coordFruit = snake.spawnFruit();
                 repaint();
@@ -110,7 +106,7 @@ public class SnakeWindow extends JPanel {
 
     private void paintSnake (Graphics g, SnakeMechanic snakes){
         g.setColor(Color.decode("#FFB90F"));
-        int radius = snakes.getRADIUS_SEGMENT();
+        int radius = snakes.RADIUS_SEGMENT;
         List<Point> snakePosition = snakes.getSnakePosition();
         g.fillOval((int)round(snakePosition.get(0).getX()), (int)round(snakePosition.get(0).getY()),
                 2 * radius,  2 * radius);
@@ -123,7 +119,7 @@ public class SnakeWindow extends JPanel {
 
     private  void paintFood(Graphics g){
         g.setColor(Color.decode("#00FF00"));
-        int radius = snake.getRADIUS_SEGMENT() ;
+        int radius = snake.RADIUS_SEGMENT;
         Point fruit = coordFruit;
         g.fillOval((int)round(fruit.getX()) , (int)round(fruit.getY()),
                 2 * radius, 2* radius);

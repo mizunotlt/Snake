@@ -2,15 +2,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Math.PI;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class SnakeMechanic {
 
-    private final int RADIUS_SEGMENT = 10;
+    public final int RADIUS_SEGMENT = 10;
     private final Random RANDOM = new Random();
     private int size ;
+    private double speed = 2.0;
     private boolean spawnFood = false;
+    private double angle = 0.0;
+    public  double dangle = PI / 12;
     private List<Point> snakePosition = new ArrayList<>();
     private Point snakeHead = new Point();
     private int lengthSnake = 1;
@@ -21,9 +25,7 @@ public class SnakeMechanic {
         snakePosition.add(snakeHead);
     }
 
-    public int getRADIUS_SEGMENT(){
-        return  RADIUS_SEGMENT;
-    }
+    public double getAngle(){return angle;}
     public boolean getSpawnFood(){
         return spawnFood;
     }
@@ -32,6 +34,13 @@ public class SnakeMechanic {
     }
     public List<Point> getSnakePosition(){
         return snakePosition;
+    }
+
+    public double incAngle(){
+        return angle += dangle;
+    }
+    public double decAngle(){
+        return  angle -= dangle;
     }
 
     public void checkCollision(Point cordFruit, double dx, double dy){
@@ -45,9 +54,11 @@ public class SnakeMechanic {
 
     }
 
-    public void moveSnake(double speed, double dx, double dy,
+    public void moveSnake(double dx, double dy,
                           double acceleration) {
-
+        if (lengthSnake % 5 == 0){
+            speed += 0.01;
+        }
         snakeHead.setLocation(snakeHead.getX() + speed * acceleration * dx,
                 snakeHead.getY() + speed * acceleration * dy);
         for (int i = lengthSnake - 1 ; i > 0 ; i--){
