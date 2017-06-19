@@ -6,7 +6,7 @@ import static java.lang.Math.pow;
 
 public class SnakeMechanic {
 
-    public final int RADIUS_SEGMENT = 10;
+    private final int RADIUS_SEGMENT = 10;
     private final Random RANDOM = new Random();
     private  int size ;
     private final double SPEED = 2.0;
@@ -21,6 +21,10 @@ public class SnakeMechanic {
         snakePosition.add(snakeHead);
     }
 
+    public int getRADIUS_SEGMENT(){
+        return  RADIUS_SEGMENT;
+    }
+
     public void checkCollision(Point cordFruit, double dx, double dy){
         Point coordFruit = cordFruit;
         if (pow(snakePosition.get(0).getX() - coordFruit.getX(), 2)  +
@@ -32,12 +36,45 @@ public class SnakeMechanic {
         }
 
     }
+
     public void moveSnake(double dx, double dy) {
+        /*
         snakePosition.get(0).setLocation(snakePosition.get(0).getX() + SPEED * dx,
                 snakePosition.get(0).getY() + SPEED * dy);
         for (int i = 1 ; i <= lengthSnake - 1 ; i++){
-            snakePosition.get(i).setLocation( snakePosition.get(i - 1).getX()  -  2 * RADIUS_SEGMENT * dx,
-                    snakePosition.get(i - 1).getY() - 2 * RADIUS_SEGMENT * dy);
+            snakePosition.get(i).setLocation( snakePosition.get(i - 1).getX()  -  2 * RADIUS_SEGMENT * dx ,
+                    snakePosition.get(i - 1).getY() - 2 * RADIUS_SEGMENT * dy  );
+        }
+        */
+        snakePosition.get(0).setLocation(snakePosition.get(0).getX() + SPEED * dx,
+                snakePosition.get(0).getY() + SPEED * dy);
+        for (int i = 1 ; i <= lengthSnake - 1 ; i++){
+            double prevX  = snakePosition.get(i).getX();
+            double prevY = snakePosition.get(i).getY();
+            snakePosition.get(i).setLocation( snakePosition.get(i - 1).getX(),
+                    snakePosition.get(i - 1).getY() );
+            //коррекция по направлениям
+            if ((prevX != snakePosition.get(i).getX()) && (prevY != snakePosition.get(i).getY())){
+                snakePosition.get(i).setLocation( snakePosition.get(i).getX()  -  2 * RADIUS_SEGMENT * dx ,
+                        snakePosition.get(i).getY() - 2 * RADIUS_SEGMENT * dy  );
+            }
+            if ((prevX == snakePosition.get(i).getX()) && (prevY < snakePosition.get(i).getY())){
+                snakePosition.get(i).setLocation( snakePosition.get(i).getX(),
+                        snakePosition.get(i).getY() + 2 * RADIUS_SEGMENT * dy  );
+            }
+            if ((prevX == snakePosition.get(i).getX()) && (prevY > snakePosition.get(i).getY())){
+                snakePosition.get(i).setLocation( snakePosition.get(i).getX(),
+                        snakePosition.get(i).getY() - 2 * RADIUS_SEGMENT * dy  );
+            }
+            if ((prevX < snakePosition.get(i).getX()) && (prevY == snakePosition.get(i).getY())){
+                snakePosition.get(i).setLocation( snakePosition.get(i).getX()  +  2 * RADIUS_SEGMENT * dx ,
+                        snakePosition.get(i).getY());
+            }
+            if ((prevX > snakePosition.get(i).getX()) && (prevY == snakePosition.get(i).getY())){
+                snakePosition.get(i).setLocation( snakePosition.get(i).getX()  -  2 * RADIUS_SEGMENT * dx ,
+                        snakePosition.get(i ).getY());
+            }
+
         }
     }
 

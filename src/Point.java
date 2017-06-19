@@ -1,8 +1,7 @@
-import java.awt.geom.Point2D;
 import java.util.Objects;
 
 
-class Point extends Point2D {
+class Point  {
     private double x;
     private double y;
 
@@ -15,21 +14,22 @@ class Point extends Point2D {
         this.x = x;
         this.y = y;
     }
-    @Override
+
     public double getX() {
         return x;
     }
 
-    @Override
+
     public double getY() {
         return y;
     }
 
-    @Override
+
     public void setLocation(double x, double y) {
         this.x = x;
         this.y = y;
     }
+
     @Override
     public boolean equals(Object o){
         Point point = (Point) o;

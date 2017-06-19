@@ -92,7 +92,7 @@ public class SnakeWindow extends JPanel {
 
     private void paintSnake (Graphics g, SnakeMechanic snakes){
         g.setColor(Color.decode("#FFB90F"));
-        int radius = snakes.RADIUS_SEGMENT;
+        int radius = snakes.getRADIUS_SEGMENT();
         g.fillOval((int)round(snakes.snakePosition.get(0).getX()), (int)round(snakes.snakePosition.get(0).getY()),
                 2 * radius,  2 * radius);
         g.setColor((Color.GREEN));
@@ -104,7 +104,7 @@ public class SnakeWindow extends JPanel {
 
     private  void paintFood(Graphics g){
         g.setColor(Color.decode("#00FF00"));
-        int radius = snake.RADIUS_SEGMENT / 2;
+        int radius = snake.getRADIUS_SEGMENT() / 2;
         Point fruit = coordFruit;
         g.fillOval((int)round(fruit.getX()) , (int)round(fruit.getY()),
                 2 * radius, 2* radius);
