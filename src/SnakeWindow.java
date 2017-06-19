@@ -21,6 +21,7 @@ public class SnakeWindow extends JPanel {
     private final int IMG_WIDTH = 25;
     private final int IMG_HEIGHT = 25;
     private double angle = 0;
+    private double speed = 2.0;
     private int lengthSnake;
     private double acceleration = 1.0;
 
@@ -59,30 +60,33 @@ public class SnakeWindow extends JPanel {
                         dx = cos( angle);
                         dy = sin(angle );
                         break;
+                    case KeyEvent.VK_UP:
+                        acceleration = 1.0;
+                        break;
                 }
             }
         };
         ActionListener timerListener = e -> {
             lengthSnake = snake.getLengthSnake();
             List<Point> snakePosition = snake.getSnakePosition();
+            if (lengthSnake % 5 == 0){
+                speed += 0.25;
+            }
+
             if (!GameOver){
                 snake.checkCollision(coordFruit, dx, dy);
-                snake.moveSnake(dx,dy,acceleration);
+                snake.moveSnake(speed,dx,dy,acceleration);
                 if(!snake.getSpawnFood())
                     coordFruit = snake.spawnFruit();
                 repaint();
             }
             if ((snakePosition.get(0).getX() >= SIZE || snakePosition.get(0).getY() >= SIZE ||
-                    snakePosition.get(0).getX() <= 0 || snakePosition.get(0).getY() <= 0) ||
-                    (snakePosition.get(lengthSnake - 1).getX() >= SIZE ||
-                    snakePosition.get(lengthSnake -1).getY() >= SIZE) ||
-                    (snakePosition.get(lengthSnake - 1).getX() <= 0 ||
-                    snakePosition.get(lengthSnake -1).getY() <= 0)){
+                    snakePosition.get(0).getX() <= 0 || snakePosition.get(0).getY() <= 0)){
                 GameOver = true;
             }
         };
         this.addKeyListener(keyListener);
-        Timer timer1 = new Timer(20, timerListener);
+        Timer timer1 = new Timer(35, timerListener);
         timer1.start();
         imageDownload();
 
@@ -119,7 +123,7 @@ public class SnakeWindow extends JPanel {
 
     private  void paintFood(Graphics g){
         g.setColor(Color.decode("#00FF00"));
-        int radius = snake.getRADIUS_SEGMENT() / 2;
+        int radius = snake.getRADIUS_SEGMENT() ;
         Point fruit = coordFruit;
         g.fillOval((int)round(fruit.getX()) , (int)round(fruit.getY()),
                 2 * radius, 2* radius);

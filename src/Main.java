@@ -2,14 +2,13 @@ import javax.swing.*;
 
 public class Main extends JFrame{
 
-    private static SnakeWindow snakeWindow;
+    private static SnakeWindow snakeWindow = new SnakeWindow();
     private final int Window_with = snakeWindow.getSIZE();
     private final int Window_hight = snakeWindow.getSIZE();
 
     private Main(String s){
         super(s);
         setSize(Window_with, Window_hight);
-        snakeWindow = new  SnakeWindow();
         add(snakeWindow);
         this.setContentPane(snakeWindow);
         setVisible(true);
