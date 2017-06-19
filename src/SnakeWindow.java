@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-
+import java.util.List;
 import static java.lang.Math.*;
 
 
@@ -21,6 +21,7 @@ public class SnakeWindow extends JPanel {
     private final int IMG_WIDTH = 25;
     private final int IMG_HEIGHT = 25;
     private double angle = 0;
+    private int lengthSnake;
 
     public SnakeWindow(){
         setBackground(Color.decode("#A4D3EE"));
@@ -55,15 +56,21 @@ public class SnakeWindow extends JPanel {
             }
         };
         ActionListener timerListener = e -> {
+            lengthSnake = snake.getLengthSnake();
+            List<Point> snakePosition = snake.getSnakePosition();
             if (!GameOver){
                 snake.checkCollision(coordFruit, dx, dy);
                 snake.moveSnake(dx,dy);
-                if(!snake.spawnFood)
+                if(!snake.getSpawnFood())
                     coordFruit = snake.spawnFruit();
                 repaint();
             }
-            if (snake.snakePosition.get(0).getX() >= SIZE || snake.snakePosition.get(0).getY() >= SIZE ||
-                    snake.snakePosition.get(0).getX() <= 0 || snake.snakePosition.get(0).getY() <= 0){
+            if ((snakePosition.get(0).getX() >= SIZE || snakePosition.get(0).getY() >= SIZE ||
+                    snakePosition.get(0).getX() <= 0 || snakePosition.get(0).getY() <= 0) ||
+                    (snakePosition.get(lengthSnake - 1).getX() >= SIZE ||
+                    snakePosition.get(lengthSnake -1).getY() >= SIZE) ||
+                    (snakePosition.get(lengthSnake - 1).getX() <= 0 ||
+                    snakePosition.get(lengthSnake -1).getY() <= 0)){
                 GameOver = true;
             }
         };
@@ -83,7 +90,7 @@ public class SnakeWindow extends JPanel {
         else
             if (!GameOver) {
                 paintSnake(g, snake);
-                if(snake.spawnFood)
+                if(snake.getSpawnFood())
                     paintFood(g);
             }
             else
@@ -93,11 +100,12 @@ public class SnakeWindow extends JPanel {
     private void paintSnake (Graphics g, SnakeMechanic snakes){
         g.setColor(Color.decode("#FFB90F"));
         int radius = snakes.getRADIUS_SEGMENT();
-        g.fillOval((int)round(snakes.snakePosition.get(0).getX()), (int)round(snakes.snakePosition.get(0).getY()),
+        List<Point> snakePosition = snakes.getSnakePosition();
+        g.fillOval((int)round(snakePosition.get(0).getX()), (int)round(snakePosition.get(0).getY()),
                 2 * radius,  2 * radius);
         g.setColor((Color.GREEN));
-        for ( int i = 1; i < snakes.lengthSnake; i ++){
-            g.fillOval((int)round(snakes.snakePosition.get(i).getX()), (int)round(snakes.snakePosition.get(i).getY()),
+        for ( int i = 1; i < snakes.getLengthSnake(); i ++){
+            g.fillOval((int)round(snakePosition.get(i).getX()), (int)round(snakePosition.get(i).getY()),
                     2* radius,   2 * radius);
         }
     }
@@ -120,7 +128,7 @@ public class SnakeWindow extends JPanel {
     private  void paintEndGame(Graphics g){
         g.setFont(new Font("Bebas Neue", Font.BOLD, 50));
         g.drawString("Игра окончена ", 100, 100);
-        g.drawString("Ваш счет " + snake.lengthSnake, 100, 140);
+        g.drawString("Ваш счет " + snake.getLengthSnake(), 100, 140);
     }
 
     private void imageDownload(){

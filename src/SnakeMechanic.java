@@ -8,12 +8,12 @@ public class SnakeMechanic {
 
     private final int RADIUS_SEGMENT = 10;
     private final Random RANDOM = new Random();
-    private  int size ;
+    private int size ;
     private final double SPEED = 2.0;
-    public  boolean spawnFood = false;
-    public List<Point> snakePosition = new ArrayList<>();
-    public Point snakeHead = new Point();
-    public int lengthSnake = 1;
+    private boolean spawnFood = false;
+    private List<Point> snakePosition = new ArrayList<>();
+    private Point snakeHead = new Point();
+    private int lengthSnake = 1;
 
     public SnakeMechanic(int size){
         this.size = size;
@@ -23,6 +23,15 @@ public class SnakeMechanic {
 
     public int getRADIUS_SEGMENT(){
         return  RADIUS_SEGMENT;
+    }
+    public boolean getSpawnFood(){
+        return spawnFood;
+    }
+    public int getLengthSnake(){
+        return lengthSnake;
+    }
+    public List<Point> getSnakePosition(){
+        return snakePosition;
     }
 
     public void checkCollision(Point cordFruit, double dx, double dy){
@@ -77,7 +86,6 @@ public class SnakeMechanic {
 
         }
     }
-
     public Point spawnFruit(){
         double nextCordX;
         double nextCorfY;
