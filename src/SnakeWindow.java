@@ -21,7 +21,6 @@ public class SnakeWindow extends JPanel {
     private final int IMG_WIDTH = 25;
     private final int IMG_HEIGHT = 25;
     private int lengthSnake;
-    private double acceleration = 1.0;
 
     public  int getSIZE(){
         return SIZE;
@@ -44,7 +43,7 @@ public class SnakeWindow extends JPanel {
                             GameStart = true;
                         break;
                     case KeyEvent.VK_UP:
-                        acceleration = 1.5;
+                        SnakeMechanic.checkAccel = true;
                         break;
                 }
             }
@@ -59,7 +58,7 @@ public class SnakeWindow extends JPanel {
                         dy = sin(snake.getAngle() );
                         break;
                     case KeyEvent.VK_UP:
-                        acceleration = 1.0;
+                        SnakeMechanic.checkAccel = false;
                         break;
                 }
             }
@@ -71,7 +70,7 @@ public class SnakeWindow extends JPanel {
 
             if (!GameOver){
                 snake.checkCollision(coordFruit, dx, dy);
-                snake.moveSnake(dx,dy,acceleration);
+                snake.moveSnake(dx,dy);
                 if(!snake.getSpawnFood())
                     coordFruit = snake.spawnFruit();
                 repaint();

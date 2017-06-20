@@ -14,10 +14,12 @@ public class SnakeMechanic {
     private double speed = 2.0;
     private boolean spawnFood = false;
     private double angle = 0.0;
-    public  double dangle = PI / 12;
+    public  final double dangle = PI / 12;
     private List<Point> snakePosition = new ArrayList<>();
     private Point snakeHead = new Point();
     private int lengthSnake = 1;
+    private final double acceleration = 1.5;
+    static boolean checkAccel = false;
 
     public SnakeMechanic(int size){
         this.size = size;
@@ -25,7 +27,9 @@ public class SnakeMechanic {
         snakePosition.add(snakeHead);
     }
 
-    public double getAngle(){return angle;}
+    public double getAngle(){
+        return angle;
+    }
     public boolean getSpawnFood(){
         return spawnFood;
     }
@@ -54,13 +58,16 @@ public class SnakeMechanic {
 
     }
 
-    public void moveSnake(double dx, double dy,
-                          double acceleration) {
+    public void moveSnake(double dx, double dy) {
         if (lengthSnake % 5 == 0){
             speed += 0.01;
         }
-        snakeHead.setLocation(snakeHead.getX() + speed * acceleration * dx,
+        if (checkAccel)
+            snakeHead.setLocation(snakeHead.getX() + speed * acceleration * dx,
                 snakeHead.getY() + speed * acceleration * dy);
+        else
+            snakeHead.setLocation(snakeHead.getX() + speed * dx,
+                    snakeHead.getY() + speed * dy);
         for (int i = lengthSnake - 1 ; i > 0 ; i--){
             snakePosition.get(i).setLocation( snakePosition.get(i - 1).getX() - dx * RADIUS_SEGMENT,
                     snakePosition.get(i - 1).getY() - RADIUS_SEGMENT* dy);
